@@ -7,6 +7,7 @@ import (
 import (
 	"github.com/mvmorin/aoc2023/day01"
 	"github.com/mvmorin/aoc2023/day02"
+	"github.com/mvmorin/aoc2023/day03"
 )
 
 func main() {
@@ -17,12 +18,14 @@ func main() {
 		day01.Prob2,
 		day02.Prob1,
 		day02.Prob2,
+		day03.Prob1,
+		day03.Prob2,
 	}
 
 	start_time := time.Now()
 
 	for i, f := range fns {
-		fmt.Printf("Day %d, problem %d: ", i / 2, i % 2 + 1)
+		fmt.Printf("Day %d, problem %d: ", i / 2 + 1, i % 2 + 1)
 		tic := time.Now()
 		f()
 		fmt.Printf("Time: %s\n\n", time.Since(tic).String())
