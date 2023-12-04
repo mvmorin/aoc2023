@@ -4,74 +4,68 @@ import (
 	_ "embed"
 	"fmt"
 	"slices"
-	"unicode"
 )
 
 //go:embed input.txt
 var input []byte
 
-type Schematic struct {
-	rows int
-	cols int
-	schm []byte
+func is_digit(b byte) bool {
+	return '0' <= b && b <= '9'
 }
 
-type Number struct {
-	val   int
-	row   int
-	start int
-	end   int
-}
+func parse_val(buf []byte, i int) (int, int, int) {
+	for ; is_digit(buf[i]) && i > 0; i-- {}
 
-func parse(input []byte) Schematic {
-	cols := slices.Index(input, '\n') + 1
-	rows := len(input) / cols
-	schm := Schematic{rows: rows, cols: cols, schm: input}
-
-	return schm
-}
-
-func has_symbol_neighbour(nbr Number, schm Schematic) bool {
-	for r := max(0, nbr.row-1); r <= min(schm.rows-1, nbr.row+1); r++ {
-		for c := max(0, nbr.start-1); c <= min(schm.cols-1, nbr.end+1); c++ {
-			b := schm.schm[c+r*schm.cols]
-
-			if b != '\n' && !unicode.IsDigit(rune(b)) && b != '.' {
-				return true
-			}
-		}
+	if !is_digit(buf[i]) {
+		i++
 	}
+	start := i
+	val := 0
+	for ; is_digit(buf[i]); i++ {
+		val = 10*val + int(buf[i] - '0')
+	}
+	end := i-1
 
-	return false
+	return val, start, end
 }
 
 func Prob1() int {
-	schm := parse(input)
+	buf := make([]byte, len(input))
+	copy(buf, input)
 
-	var nbr *Number = nil
+	cols := slices.Index(buf, '\n') + 1
+	rows := len(buf) / cols
 
 	sum := 0
-
-	for r := 0; r < schm.rows; r++ {
-		for c := 0; c < schm.cols; c++ {
-			b := schm.schm[c+r*schm.cols]
-			is_digit := unicode.IsDigit(rune(b))
-
-			if is_digit && nbr == nil {
-				nbr = &Number{
-					val:   int(b - '0'),
-					row:   r,
-					start: c,
-				}
-			} else if is_digit && nbr != nil {
-				nbr.val = 10*nbr.val + int(b-'0')
-			} else if !is_digit && nbr != nil {
-				nbr.end = c - 1
-				if has_symbol_neighbour(*nbr, schm) {
-					sum = sum + nbr.val
-				}
-				nbr = nil
+	for r := 0; r < rows; r++ {
+		for c := 0; c < cols; c++ {
+			i := c + r*cols
+			b := buf[i]
+			if is_digit(b) || b == '.' || b == '\n' {
+				continue
 			}
+
+			for r_s := r-1; r_s <= r+1; r_s++ {
+				for c_s := c-1; c_s <= c+1; c_s++ {
+					i_s := c_s + r_s*cols
+					if i_s < 0 || i_s >= len(buf) || (r_s == r && c_s == c) {
+						continue
+					}
+
+					b_s := buf[i_s]
+					if is_digit(b_s) {
+						val, start, end := parse_val(buf, i_s)
+						sum += val
+
+						for i_d := start; i_d <= end; i_d++ {
+							buf[i_d] = '.'
+						}
+
+					}
+
+				}
+			}
+
 		}
 	}
 
@@ -80,64 +74,44 @@ func Prob1() int {
 }
 
 func Prob2() int {
-	schm := parse(input)
+	buf := make([]byte, len(input))
+	copy(buf, input)
 
-	var nbr *Number = nil
-	gears := make([]struct {
-		r int
-		c int
-	}, 0)
-	nbrs := make([][]*Number, schm.cols)
-	for r := range nbrs {
-		nbrs[r] = make([]*Number, 0)
-	}
-
-	for r := 0; r < schm.rows; r++ {
-		for c := 0; c < schm.cols; c++ {
-			b := schm.schm[c+r*schm.cols]
-			is_digit := unicode.IsDigit(rune(b))
-
-			if b == '*' {
-				gears = append(gears, struct {
-					r int
-					c int
-				}{r, c})
-			}
-
-			if is_digit && nbr == nil {
-				nbr = &Number{
-					val:   int(b - '0'),
-					row:   r,
-					start: c,
-				}
-			} else if is_digit && nbr != nil {
-				nbr.val = 10*nbr.val + int(b-'0')
-			} else if !is_digit && nbr != nil {
-				nbr.end = c - 1
-				nbrs[r] = append(nbrs[r], nbr)
-				nbr = nil
-			}
-		}
-	}
+	cols := slices.Index(buf, '\n') + 1
+	rows := len(buf) / cols
 
 	sum := 0
-	for _, g := range gears {
-		vals := make([]int, 0)
-		for r := max(g.r-1, 0); r <= min(g.r+1, len(nbrs)); r++ {
-			for _, nbr := range nbrs[r] {
-				up := nbr.row - 1
-				low := nbr.row + 1
-				left := nbr.start - 1
-				right := nbr.end + 1
+	for r := 0; r < rows; r++ {
+		for c := 0; c < cols; c++ {
+			i := c + r*cols
+			b := buf[i]
+			if b != '*' {
+				continue
+			}
 
-				if up <= g.r && g.r <= low && left <= g.c && g.c <= right {
-					vals = append(vals, nbr.val)
+			neighbours := 0
+			ratio := 1
+
+			for r_s := r-1; r_s <= r+1; r_s++ {
+				skip_past := -1
+				for c_s := c-1; c_s <= c+1; c_s++ {
+					i_s := c_s + r_s*cols
+					if i_s < 0 || i_s >= len(buf) || (r_s == r && c_s == c) || i_s <= skip_past {
+						continue
+					}
+
+					b_s := buf[i_s]
+					if is_digit(b_s) {
+						val, _, end := parse_val(buf, i_s)
+						skip_past = end
+						ratio *= val
+						neighbours++
+					}
 				}
 			}
-		}
-
-		if len(vals) == 2 {
-			sum += vals[0] * vals[1]
+			if neighbours == 2 {
+				sum += ratio
+			}
 		}
 	}
 
