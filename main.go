@@ -11,6 +11,7 @@ import (
 	"github.com/mvmorin/aoc2023/day04"
 	"github.com/mvmorin/aoc2023/day05"
 	"github.com/mvmorin/aoc2023/day06"
+	"github.com/mvmorin/aoc2023/day07"
 )
 
 func main() {
@@ -29,6 +30,8 @@ func main() {
 		day05.Prob2,
 		day06.Prob1,
 		day06.Prob2,
+		day07.Prob1,
+		day07.Prob2,
 	}
 
 	start_time := time.Now()
