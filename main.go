@@ -16,42 +16,52 @@ import (
 	"github.com/mvmorin/aoc2023/day09"
 	"github.com/mvmorin/aoc2023/day10"
 	"github.com/mvmorin/aoc2023/day11"
+	"github.com/mvmorin/aoc2023/day12"
 	"github.com/mvmorin/aoc2023/day13"
+	"github.com/mvmorin/aoc2023/day14"
 )
 
 func main() {
 	fmt.Print("Advent of Code 2023\n\n")
 
-	fns := []func()int {
-		day01.Prob1,
-		day01.Prob2,
-		day02.Prob1,
-		day02.Prob2,
-		day03.Prob1,
-		day03.Prob2,
-		day04.Prob1,
-		day04.Prob2,
-		day05.Prob1,
-		day05.Prob2,
-		day06.Prob1,
-		day06.Prob2,
-		day07.Prob1,
-		day07.Prob2,
-		day08.Prob1,
-		day08.Prob2,
-		day09.Prob1,
-		day09.Prob2,
-		day10.Prob1,
-		day10.Prob2,
-		day11.Prob1,
-		day11.Prob2,
-		day13.Prob1,
-		day13.Prob2,
+	fns := []struct{f func()int; run bool} {
+		{day01.Prob1, true},
+		{day01.Prob2, true},
+		{day02.Prob1, true},
+		{day02.Prob2, true},
+		{day03.Prob1, true},
+		{day03.Prob2, true},
+		{day04.Prob1, true},
+		{day04.Prob2, true},
+		{day05.Prob1, true},
+		{day05.Prob2, true},
+		{day06.Prob1, true},
+		{day06.Prob2, true},
+		{day07.Prob1, true},
+		{day07.Prob2, true},
+		{day08.Prob1, true},
+		{day08.Prob2, true},
+		{day09.Prob1, true},
+		{day09.Prob2, true},
+		{day10.Prob1, true},
+		{day10.Prob2, true},
+		{day11.Prob1, true},
+		{day11.Prob2, true},
+		{day12.Prob1, false},
+		{day12.Prob2, false},
+		{day13.Prob1, true},
+		{day13.Prob2, true},
+		{day14.Prob1, true},
+		{day14.Prob2, true},
 	}
 
 	start_time := time.Now()
 
-	for i, f := range fns {
+	for i, t := range fns {
+		if !t.run {
+			continue
+		}
+		f := t.f
 		fmt.Printf("Day %d, problem %d: ", i / 2 + 1, i % 2 + 1)
 		tic := time.Now()
 		f()
