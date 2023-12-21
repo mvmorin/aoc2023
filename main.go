@@ -72,7 +72,7 @@ func main() {
 		{day17.Prob2, false},
 		{day18.Prob1, false},
 		{day18.Prob2, false},
-		{day19.Prob1, false},
+		{day19.Prob1, true},
 		{day19.Prob2, false},
 		{day20.Prob1, false},
 		{day20.Prob2, false},

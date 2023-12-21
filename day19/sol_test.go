@@ -6,7 +6,7 @@ import (
 
 func Test1(t *testing.T) {
 	res := Prob1()
-	correct := 0
+	correct := 280909
 	if res != correct {
 		t.Errorf("Wrong result %d, should be %d", res, correct)
 	}
