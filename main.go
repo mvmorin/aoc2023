@@ -21,6 +21,15 @@ import (
 	"github.com/mvmorin/aoc2023/day14"
 	"github.com/mvmorin/aoc2023/day15"
 	"github.com/mvmorin/aoc2023/day16"
+	"github.com/mvmorin/aoc2023/day17"
+	"github.com/mvmorin/aoc2023/day18"
+	"github.com/mvmorin/aoc2023/day19"
+	"github.com/mvmorin/aoc2023/day20"
+	"github.com/mvmorin/aoc2023/day21"
+	"github.com/mvmorin/aoc2023/day22"
+	"github.com/mvmorin/aoc2023/day23"
+	"github.com/mvmorin/aoc2023/day24"
+	"github.com/mvmorin/aoc2023/day25"
 )
 
 func main() {
@@ -59,6 +68,24 @@ func main() {
 		{day15.Prob2, true},
 		{day16.Prob1, true},
 		{day16.Prob2, true},
+		{day17.Prob1, true},
+		{day17.Prob2, false},
+		{day18.Prob1, false},
+		{day18.Prob2, false},
+		{day19.Prob1, false},
+		{day19.Prob2, false},
+		{day20.Prob1, false},
+		{day20.Prob2, false},
+		{day21.Prob1, false},
+		{day21.Prob2, false},
+		{day22.Prob1, true},
+		{day22.Prob2, true},
+		{day23.Prob1, true},
+		{day23.Prob2, true},
+		{day24.Prob1, true},
+		{day24.Prob2, true},
+		{day25.Prob1, true},
+		{day25.Prob2, true},
 	}
 
 	start_time := time.Now()
